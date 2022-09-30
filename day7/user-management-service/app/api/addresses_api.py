@@ -30,7 +30,12 @@ class AddressesApi(Resource):
 		return addresses, 201
 
 	def put(self):
-		return {'message': 'Hello PUT'}
+        conn = get_db_connection()
+		address_db.get_address_details(conn, id,user_id) #validate id address exists befire udpate
+		address_db.update_address_details(conn, id, Address.from_json(request.json),user_id)
+		addresses = address_db.get_address_details(conn, id,user_id)
+		commit_and_close_db_connection(conn)
+		return addresses
 
 	def delete(self):
 		return {'message': 'Hello DELETE'}
